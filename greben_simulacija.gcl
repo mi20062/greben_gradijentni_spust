@@ -1,0 +1,554 @@
+
+fontsize 6
+
+% ---------------- Dimenzije platna ----------------
+number minX 0
+number minY 0
+number maxX 150
+number maxY 150
+dim maxX maxY
+
+point LO minX maxY
+point RO maxX maxY
+point LU minX minY
+point RU maxX minY
+line l1 LO RU
+line l2 LU RO
+intersec O l1 l2
+getx Ox O
+gety Oy O
+
+expression Xmin {minX+2} 
+expression Ymin {minY+2} 
+expression Xmax {maxX-2} 
+expression Ymax {maxY-2} 
+
+% ---------------- 3D koordinatni sistem ----------------
+ang3d_picture Xmin Ymin Xmax Ymax
+
+% *** OVDE SE MENJA POGLED ***
+% prvi broj = udaljenost kamere
+% drugi broj = ugao (0 – odozgo, 1.5 – sa strane)
+ang3d_origin Ox Oy 2.2 0.9
+
+ang3d_unit 10
+ang3d_scale 1 1 1
+ang3d_axes_drawing_range -6 6 -6 6 -6 6
+
+
+
+% ---------------- Greben ----------------
+
+
+number A 3
+number F 0.4
+
+%------------- PLATO ----------------------
+color 240	220	130  
+ang3d_draw_parametric_surface  u v
+    {-20; u<=-8; u+0.5}   
+    {-6; v<=6; v+0.25}  
+    {
+      0.5*u + sin(0.9*v);      
+      2*v;
+      0
+    }
+% ---------------- GREBEN ----------------
+color 240	220	130  
+ang3d_draw_parametric_surface  u v
+    {-8; u<=0; u+0.25}
+    {-6; v<=6; v+0.125}
+    {
+      0.5*u + sin(0.9*v);      
+      2*v;
+      A * abs( sin(F*u) )
+    }
+
+% ---------------- GREBEN ----------------
+color 116	220	130  
+ang3d_draw_parametric_surface  u v
+    {-8; u<=0; u+0.25}
+    {-6; v<=6; v+0.25}
+    {
+      0.5*u + sin(0.9*v);      
+      2*v;
+      A * abs( sin(F*u) )
+    }
+
+
+
+% ---------------- PLATO ----------------
+color 240	220	130  
+ang3d_draw_parametric_surface  u v
+    {0; u<=170; u+0.5}   
+    {-6; v<=6; v+0.25}  
+    {
+      0.5*u + sin(0.9*v);      
+      2*v;
+      0
+    }
+
+
+
+
+
+
+color 0 0 255
+point A 6 81
+%cmark_l A
+drawpoint A
+
+point B 20 80
+%cmark_l B
+drawpoint B
+
+drawsegment A B
+drawsegment A B
+drawsegment A B
+
+getx  ax A 
+getx  bx B 
+gety  ay A
+gety  by B
+
+%--------------------
+expression Tx { bx + 4*(bx-ax) }
+expression Ty { by + 4*(by-ay) }
+point T Tx Ty
+
+
+%-----------------
+
+point T1 0 0 1 0  
+getx t1 T1 
+expression x1x { ax*(1-t1) + Tx*t1 }
+expression x1y { ay*(1-t1) + Ty*t1 }
+
+color 255 0 0
+point x1 x1x x1y 
+distance dAB A B
+distance dAT A T
+color 255 0 0
+%cmark_lt x1
+expression vreme { dAB/dAT}
+if_then_else { t1 <= vreme }
+{
+ cmark_lt x1
+ color 0 0 255
+ fontsize 12
+ cmark_lt A
+ %trace x2 28 188 199
+}
+{
+}
+trace x1 28 188 199
+
+
+%color 255 0 0
+%cmark_lt x1
+%trace x1 255 0 0
+
+color 0 0 255
+point C 15 91
+%cmark_l C
+drawpoint C
+
+drawsegment B C
+drawsegment B C
+drawsegment B C
+
+getx cx C
+gety cy C
+%--------------
+expression T2x { cx + 4*(cx-bx) }
+expression T2y { cy + 4*(cy-by) }
+point T2 T2x T2y
+
+expression T3x { cx - 2.2*(cx-bx) }
+expression T3y { cy - 2.2*(cy-by) }
+point T3 T3x T3y
+%--------------
+
+%point T1 0 0 1 1 
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x2 m2x m2y
+distance dT3T2 T3 T2
+distance dT3C T3 C
+distance dBC B C
+expression kraj {dT3C/dT3T2}
+if_then_else { t1 >= vreme && t1<=kraj }
+{
+ cmark_lt x2
+ trace x2 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lb B
+}
+{
+}
+
+
+
+color 0 0 255
+point D 26 86
+%cmark_l D
+drawpoint D
+
+
+drawsegment C D
+drawsegment C D
+drawsegment C D
+
+getx dx D
+gety dy D
+%--------------
+expression T2x { dx - 2.8*(dx-cx) }
+expression T2y { dy - 2.8*(dy-cy) }
+point T2 T2x T2y
+
+expression T3x { dx + 2.2*(dx-cx) }
+expression T3y { dy + 2.2*(dy-cy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3D T2 D
+%--------------
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T2x*(1-t1) + T3x*t1} 
+expression m2y {T2y*(1-t1) + T3y*t1} 
+color 255 0 0
+point x3 m2x m2y
+expression kraj2 {dT3D/dT3T2}
+if_then_else { t1 >= kraj && t1<=kraj2 }
+{
+ cmark_lt x3
+ trace x3 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lt C
+}
+{
+}
+
+
+%-------------------------------------------
+color 0 0 255
+point E 22 96
+%cmark_l E
+drawpoint E
+
+
+drawsegment D E
+drawsegment D E
+drawsegment D E
+
+getx ex E
+gety ey E
+%--------------
+expression T2x { ex + 2.8*(ex-dx) }
+expression T2y { ey + 2.8*(ey-dy) }
+point T2 T2x T2y
+
+expression T3x { ex - 5.6*(ex-dx) }
+expression T3y { ey - 5.6*(ey-dy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3E T3 E
+%--------------
+
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x4 m2x m2y
+expression kraj3 {dT3E/dT3T2}
+if_then_else { t1 >= kraj2 && t1<=kraj3 }
+{
+ cmark_lt x4
+ trace x4 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lb D
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point F 32 90
+%cmark_l F
+drawpoint F
+
+
+drawsegment E F
+drawsegment E F
+drawsegment E F
+
+getx fx F
+gety fy F
+%--------------
+expression T2x { fx + 2.8*(fx-ex) }
+expression T2y { fy + 2.8*(fy-ey) }
+point T2 T2x T2y
+
+expression T3x { fx - 8.5*(fx-ex) }
+expression T3y { fy - 8.5*(fy-ey) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3F T3 F
+%--------------
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x5 m2x m2y
+expression kraj4 {dT3F/dT3T2}
+if_then_else { t1 >= kraj3 && t1<=kraj4 }
+{
+ cmark_lt x5
+ trace x5 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lt E
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point G 28 99
+%cmark_l G
+drawpoint G
+
+
+drawsegment F G
+drawsegment F G
+drawsegment F G
+
+getx gx G
+gety gy G
+%--------------
+expression T2x { gx + 2.8*(gx-fx) }
+expression T2y { gy + 2.8*(gy-fy) }
+point T2 T2x T2y
+
+expression T3x { gx - 12.6*(gx-fx) }
+expression T3y { gy - 12.6*(gy-fy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3G T3 G
+%--------------
+
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x6 m2x m2y
+expression kraj5 {dT3G/dT3T2}
+if_then_else { t1 >= kraj4 && t1<=kraj5 }
+{
+ cmark_lt x6
+ trace x6 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lb F
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point H 38 92
+%cmark_l H
+drawpoint H
+
+
+drawsegment G H
+drawsegment G H
+drawsegment G H
+
+
+getx hx H
+gety hy H
+%--------------
+expression T2x { hx + 2.8*(hx-gx) }
+expression T2y { hy + 2.8*(hy-gy) }
+point T2 T2x T2y
+
+expression T3x { hx - 17*(hx-gx) }
+expression T3y { hy - 17*(hy-gy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3H T3 H
+%--------------
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x7 m2x m2y
+expression kraj6 {dT3H/dT3T2}
+if_then_else { t1 >= kraj5 && t1<=kraj6 }
+{
+ cmark_lt x7
+ trace x7 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lt G
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point I 33 102
+%cmark_l I
+drawpoint I
+
+
+drawsegment H I
+drawsegment H I
+drawsegment H I
+
+
+
+getx ix I
+gety iy I
+%--------------
+expression T2x { ix + 2* (ix-hx) }
+expression T2y { iy + 2*(iy-hy) }
+point T2 T2x T2y
+
+expression T3x { ix - 22*(ix-hx) }
+expression T3y { iy - 22*(iy-hy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3I T3 I
+%--------------
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x8 m2x m2y
+expression kraj7 {dT3I/dT3T2}
+if_then_else { t1 >= kraj6 && t1<=kraj7 }
+{
+ cmark_lt x8
+ trace x8 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lb H
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point J 42 94
+%cmark_l J
+drawpoint J
+
+
+drawsegment I J
+drawsegment I J
+drawsegment I J
+
+
+
+getx jx J
+gety jy J
+%--------------
+expression T2x { jx + 2*(jx-ix) }
+expression T2y { jy + 2*(jy-iy) }
+point T2 T2x T2y
+
+expression T3x { jx - 30.6*(jx-ix) }
+expression T3y { jy - 30.6*(jy-iy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3J T3 J
+%--------------
+
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x9 m2x m2y
+expression kraj8 {dT3J/dT3T2}
+if_then_else { t1 >= kraj7 && t1<=kraj8 }
+{
+ cmark_lt x9
+ trace x9 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lt I
+}
+{
+}
+%-------------------------------------------
+color 0 0 255
+point K 38 103
+%cmark_l K
+drawpoint K
+
+
+drawsegment J K
+drawsegment J K
+drawsegment J K
+
+
+
+
+getx kx K
+gety ky K
+%--------------
+expression T2x { kx + 2*(kx-jx) }
+expression T2y { ky + 2*(ky-jy) }
+point T2 T2x T2y
+
+expression T3x { kx - 36*(kx-jx) }
+expression T3y { ky - 36*(ky-jy) }
+point T3 T3x T3y
+distance dT3T2 T3 T2
+distance dT3K T3 K
+%--------------
+
+%point T1 0 0 1 1  
+%getx t1 T1 
+expression m2x {T3x*(1-t1) + T2x*t1} 
+expression m2y {T3y*(1-t1) + T2y*t1} 
+color 255 0 0
+point x10 m2x m2y
+expression kraj9 {dT3K/dT3T2}
+if_then_else { t1 >= kraj8 && t1<=0.99 }
+{
+ %cmark_lt x10
+ trace x10 28 188 199
+ color 0 0 255
+ fontsize 12
+ cmark_lb J
+}
+{ 
+}
+%-------------------------------------------
+if_then_else { t1 >= 0.99 }
+{
+ 
+ color 0 0 255
+ fontsize 12
+ cmark_lt K
+}
+{ 
+}
+
+%ang3d_drawsystem_p 3 2 2 2 3 1
