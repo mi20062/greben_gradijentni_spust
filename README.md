@@ -1,6 +1,6 @@
 # Simulacija gradijentnog spusta na grebenu (GCLC vizualizacija)
 
-Ovaj projekat predstavlja vizuelnu i matematički zasnovanu simulaciju gradijentnog spusta na trodimenzionalnoj površini („grebenu”), implementiranu u programskom jeziku **GCLC**.
+Ovaj projekat predstavlja vizuelnu i matematički zasnovanu simulaciju gradijentnog spusta na trodimenzionalnoj površini („grebenu”), implementiranu u sistemu **GCLC** (Geometry Constructions → LaTeX Converter)  .
 
 Grebene možemo posmatrati kao uske staze koje se postepeno spuštaju ili penju duž jedne dominantne ose. Kada se algoritam nađe na takvoj površini, napredovanje može postati neočekivano sporo: umesto da prati idealan smer duž grebena, gradijent zbog loše izabrane dužine koraka često „preskače“ pravi put. Rezultat je karakteristično cik-cak kretanje koje oponaša lutanje oko pravca najvećeg rasta, umesto stabilnog penjanja ili spuštanja.
 
