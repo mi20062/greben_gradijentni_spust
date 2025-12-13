@@ -550,5 +550,5 @@ if_then_else { t1 >= 0.99 }
 }
 { 
 }
-
+animation_frames 200 20
 %ang3d_drawsystem_p 3 2 2 2 3 1
